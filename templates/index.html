@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Scene Text Recognition</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/styles.css') }}">
+    <script src="{{ url_for('static', filename='Js/script.js') }}" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f4f4f9;
+          color: #333;
+      }
+      header {
+          background-color: #4CAF50;
+          color: white;
+          padding: 20px;
+          text-align: center;
+      }
+      main {
+          padding: 20px;
+      }
+      h2 {
+          color: #4CAF50;
+      }
+      .case-study {
+          background-color: white;
+          padding: 15px;
+          margin: 20px 0;
+          border-radius: 8px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .case-study h3 {
+          color: #333;
+      }
+      .case-study p {
+          font-size: 16px;
+          line-height: 1.6;
+      }
+      .case-study .outcome {
+          font-weight: bold;
+          margin-top: 10px;
+      }
+      footer {
+          text-align: center;
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 0;
+          position: relative;
+          bottom: 0;
+          width: 100%;
+      }
+      nav {
+          background-color: #1a1a1d;
+          color: white;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 2rem;
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+      }
+      nav ul {
+          list-style: none;
+          display: flex;
+          gap: 1.5rem;
+      }
+      nav ul li {
+          display: inline;
+      }
+      nav ul li a {
+          text-decoration: none;
+          color: white;
+          font-weight: 600;
+          transition: color 0.3s;
+      }
+      nav ul li a:hover {
+          color: #f2a365;
+      }
+      
+  </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/feedback">Feedback</a></li>
+      </ul>
+  </nav>
+    <div class="banner" id="banner">
+      <div class="banner-overlay">
+        <div class="banner-content">
+          <h2>Scene Text Recognition</h2>
+          <button id="getStarted">Get Started</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel">
+      <div class="upload-section">
+      <form id="uploadForm">
+        <div class="upload-container">
+          <label for="image">Upload Image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+        </div>
+        <div class="upload-container">
+          <label for="txt">Upload TXT File :</label>
+                <input type="file" id="txt" name="txt" accept=".txt">
+        </div>
+          <button id="submitBtn" type="submit">Submit</button>
+      </form>
+      </div>
+
+      <div class="result-section">
+        <h3>Predicted Text</h3>
+        <div class="text-avatar-container">
+          <div class="predicted-text" id="predictedText">
+            <p id="textContent" >Your predicted text will appear here...</p>
+          </div>
+          
+          <div class="avatar-container">
+            <div class="avatar" id="avatar">
+              
+              <video id="avatarVideo" muted loop>
+                <source src="{{ url_for('static', filename='avatars/Avatar1.mp4') }}" type="video/mp4">
+              </video>
+            </div>
+            <div class="avatar-controls">
+              <button class="voice-btn" id="speakBtn">
+                <i class="fas fa-volume-up"></i>
+              </button>
+              <button id="prevAvatar">⏮️</button>
+              <button id="nextAvatar">⏭️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
