@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scene Text Recognition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="../styles.css">
+
+    <style>
+        /* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f3e5f5; /* Light Purple Background */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Navigation */
+  nav {
+    background-color: #6a1b9a; /* Dark Purple */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #d1c4e9;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+  
+  nav ul li a:hover {
+    color: #e1bee7;
+  }
+  
+  /* Main Container */
+  .container {
+    background: #fff;
+    width: 90%;
+    max-width: 1500px;
+    height: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Heading */
+  h1 {
+    color: #6a1b9a;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Upload Form */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align content to the left */
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #6a1b9a;
+  }
+  
+  input[type="file"] {
+    width: 100%;
+    padding: 15px; /* Increased padding */
+    font-size: 16px; /* Bigger font size */
+    border: 2px solid #6a1b9a;
+    border-radius: 8px;
+    background-color: #f3e5f5;
+    color: #4a148c;
+  }
+  
+  input[type="file"]:focus {
+    border-color: #4a148c;
+    outline: none;
+  }
+  
+  /* Submit Button Aligned to Left */
+  button {
+    background-color: #6a1b9a;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+    align-self: flex-start; /* Move button to the left */
+  }
+  
+  button:hover {
+    background-color: #4a148c;
+  }
+  
+  /* Output & Avatar Section */
+  .results-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  /* Predicted Text */
+  .output {
+    flex: 1;
+    padding: 15px;
+    background: #f3e5f5;
+    border-left: 5px solid #6a1b9a;
+    border-radius: 5px;
+    text-align: left;
+    font-weight: bold;
+    color: #4a148c;
+    margin-right: 20px;
+  }
+  
+  /* Avatar Section */
+  .avatar-container {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .avatar-video {
+    border: 3px solid #6a1b9a;
+    border-radius: 10px;
+  }
+  
+  .avatar-controls {
+    margin-top: 10px;
+  }
+  
+  .avatar-controls button {
+    background: none;
+    border: 1px solid #6a1b9a;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 5px;
+    color: #6a1b9a;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .avatar-controls button:hover {
+    background: #6a1b9a;
+    color: white;
+  }
+  
+  /* Footer Stays at Bottom */
+  footer {
+    background-color: #4a148c;
+    text-align: center;
+    padding: 1rem;
+    color: #d1c4e9;
+    font-size: 14px;
+    margin-top: auto;
+  }
+  
+    </style>
+</head>
+
+<body>
+    
+    <nav>
+        <div class="logo">SCENE TEXT</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/feedback">Feedback</a></li>
+            <li><a href="/logout" style="padding: 8px 16px; background-color: red; color: white; text-decoration: none; border-radius: 5px;">Logout</a></li>
+        </ul>
+    </nav>    
+
+    <div class="container">
+        <h1>Scene Text Recognition</h1>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="image">Upload Image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="txt">Upload TXT File :</label>
+                <input type="file" id="txt" name="txt" accept=".txt">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    
+        <!-- Results Section -->
+        <div class="results-container">
+            <!-- Predicted Text Section -->
+            <div id="output" class="output">
+                <p>Predicted Text</p>
+            </div>
+    
+            <!-- Avatar Section -->
+            <!-- <div class="avatar-container">
+                <div class="avatar-video" id="avatar">
+                    <video id="avatarVideo" width="250" height="175">
+                        <source src="../avatars/Avatar1.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="avatar-controls">
+                    <button id="prevAvatar">⏮️</button>
+                    <button id="playButton">▶️ Play</button>
+                    <button id="pauseButton">⏸️ Pause</button>
+                    <button id="nextAvatar">⏭️</button>
+                </div>
+            </div> -->
+            <div class="avatar-container">
+                <div class="avatar-video" id="avatar">
+                    <video id="avatarVideo" width="250" height="175">
+                        <source src="../avatars/Avatar1.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="avatar-controls">
+                    <button id="prevAvatar">⏮️</button>
+                    <button id="playButton">▶️ Play</button>
+                    <button id="pauseButton">⏸️ Pause</button>
+                    <button id="muteButton">🔊</button> <!-- New Speaker Button -->
+                    <button id="nextAvatar">⏭️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 SCENE TEXT. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+       // Speech synthesis setup
+const synth = window.speechSynthesis;
+let voices = [];
+let selectedVoice = null;
+let currentSpeech = null;
+let isMuted = false; // Track mute status
+
+// Get elements
+const playButton = document.getElementById('playButton');
+const pauseButton = document.getElementById('pauseButton');
+const muteButton = document.getElementById('muteButton');
+const avatarVideo = document.getElementById('avatarVideo');
+
+// **Mute the avatar's default video sound**
+avatarVideo.muted = true;
+
+// Avatar Switching Logic
+const avatars = [
+    { src: "/avatars/Avatar1.mp4", voiceType: "male" },
+    { src: "/avatars/Avatar2.mp4", voiceType: "female" }
+];
+
+let currentAvatarIndex = 0;
+
+// Load voices
+function loadVoices() {
+    voices = synth.getVoices();
+    if (voices.length === 0) {
+        setTimeout(loadVoices, 200); // Retry if voices are not loaded yet
+        return;
+    }
+
+    updateAvatar();
+}
+
+// Ensure voices are loaded properly
+if (synth.onvoiceschanged !== undefined) {
+    synth.onvoiceschanged = loadVoices;
+} else {
+    loadVoices();
+}
+
+// Update Avatar Video & Voice
+function updateAvatar() {
+    avatarVideo.src = avatars[currentAvatarIndex].src;
+    avatarVideo.load();
+
+    if (avatars[currentAvatarIndex].voiceType === "male") {
+        selectedVoice = voices.find(voice => voice.name.toLowerCase().includes("male")) || voices[0];
+    } else {
+        selectedVoice = voices.find(voice => voice.name.toLowerCase().includes("female")) || voices[1];
+    }
+
+    console.log(`Avatar ${currentAvatarIndex + 1} Loaded - Voice: ${selectedVoice.name}`);
+}
+
+// Switch Avatar
+document.getElementById('prevAvatar').addEventListener('click', () => {
+    currentAvatarIndex = (currentAvatarIndex - 1 + avatars.length) % avatars.length;
+    updateAvatar();
+});
+
+document.getElementById('nextAvatar').addEventListener('click', () => {
+    currentAvatarIndex = (currentAvatarIndex + 1) % avatars.length;
+    updateAvatar();
+});
+
+// **Mute/Unmute Speech Button**
+muteButton.addEventListener('click', () => {
+    isMuted = !isMuted;
+    muteButton.textContent = isMuted ? "🔇" : "🔊"; // Toggle button icon
+    if (synth.speaking && isMuted) {
+        synth.cancel(); // Stop speaking when muted
+    }
+});
+
+// **Text-to-Speech Function**
+function startSpeech(text) {
+    if (isMuted || !text.trim()) return;
+
+    if (synth.speaking) {
+        synth.cancel();
+    }
+
+    currentSpeech = new SpeechSynthesisUtterance(text);
+    currentSpeech.voice = selectedVoice;
+    currentSpeech.lang = 'en-US';
+    currentSpeech.rate = 1;
+
+    avatarVideo.play(); // Play video when speech starts
+
+    currentSpeech.onend = () => {
+        avatarVideo.pause();
+        avatarVideo.currentTime = 0;
+    };
+
+    // Loop video until speech finishes
+    avatarVideo.addEventListener("ended", function loopAvatar() {
+        if (synth.speaking) {
+            avatarVideo.currentTime = 0; 
+            avatarVideo.play();
+        } else {
+            avatarVideo.removeEventListener("ended", loopAvatar);
+        }
+    });
+
+    synth.speak(currentSpeech);
+}
+
+// **Play Button**
+playButton.addEventListener('click', () => {
+    const text = document.getElementById('output').innerText.trim();
+    if (text && !synth.speaking) {
+        startSpeech(text);
+    } else if (synth.paused) {
+        synth.resume();
+    }
+});
+
+// **Pause Button**
+pauseButton.addEventListener('click', () => {
+    if (synth.speaking) {
+        synth.pause();
+    }
+});
+
+// **Form Submission & Text Processing**
+document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const formData = new FormData();
+    const imageFile = document.getElementById('image').files[0];
+    const txtFile = document.getElementById('txt').files[0];
+
+    formData.append('image', imageFile);
+    if (txtFile) {
+        formData.append('txt', txtFile);
+    }
+
+    try {
+        const response = await fetch('/predict', {
+            method: 'POST',
+            body: formData
+        });
+
+        const results = await response.text();
+        const outputDiv = document.getElementById('output');
+        outputDiv.style.display = 'block';
+
+        if (response.ok) {
+            outputDiv.innerHTML = `<pre>${results}</pre>`;
+
+            document.querySelector('.avatar-container').style.display = 'block';
+            avatarVideo.play();
+
+            startSpeech(results);
+        } else {
+            outputDiv.textContent = `Error: ${results.error}`;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+// Load default avatar
+updateAvatar();
+
+    </script>
+
+</body>
+</html>

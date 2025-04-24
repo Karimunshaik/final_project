@@ -1,0 +1,300 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Form</title>
+  <style>
+    nav {
+        background-color: #1a1a1d;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    nav ul {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+    }
+    nav ul li {
+        display: inline;
+    }
+    nav ul li a {
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    nav ul li a:hover {
+        color: #f2a365;
+    }
+    .feedback-form-page {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .feedback-form-page h1 {
+      text-align: center;
+    }
+    .feedback-form-page form {
+      display: flex;
+      flex-direction: column;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .feedback-form-page label {
+      margin-bottom: 10px;
+    }
+    .feedback-form-page input,
+    .feedback-form-page textarea {
+      padding: 10px;
+      margin-bottom: 20px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .feedback-form-page button {
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .feedback-form-page button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/feedback">Feedback</a></li>
+    </ul>
+</nav> 
+  <div class="feedback-form-page">
+    <h1>Feedback Form</h1>
+    <form onsubmit="event.preventDefault()">
+      <label>
+        Name:
+        <input type="text" name="name" required />
+      </label>
+      <label>
+        Email:
+        <input type="email" name="email" required />
+      </label>
+      <label>
+        Feedback:
+        <textarea name="feedback" required></textarea>
+      </label>
+      <button type="submit" onclick="alert('Thank you for your feedback!')">
+        Submit
+      </button>
+    </form>
+  </div>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feedback Form</title>
+  <style>
+    /* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f3e5f5; /* Light Purple */
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Navigation Bar */
+nav {
+  background-color: #4a148c; /* Deep Purple */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+nav .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #d1c4e9; /* Light Purple */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+nav ul li a:hover {
+  color: #d1c4e9; /* Light Purple */
+}
+
+/* Feedback Form Container */
+.feedback-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* Form Styles */
+.feedback-form {
+  background-color: #6a1b9a; /* Dark Purple */
+  padding: 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.feedback-form h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: white;
+}
+
+/* Input & Textarea Styles */
+.feedback-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: white;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4a148c; /* Deep Purple */
+  color: white;
+  font-size: 14px;
+}
+
+.feedback-form input::placeholder,
+.feedback-form textarea::placeholder {
+  color: #d1c4e9;
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus {
+  outline: 2px solid #d1c4e9;
+}
+
+/* Submit Button */
+.feedback-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #d1c4e9;
+  border: none;
+  color: #4a148c;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.feedback-form button:hover {
+  background-color: #b39ddb;
+}
+
+/* Footer */
+footer {
+  background-color: #4a148c;
+  text-align: center;
+  padding: 1rem;
+  color: white;
+  font-size: 14px;
+  margin-top: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .feedback-container {
+      padding: 20px;
+  }
+  .feedback-form {
+      padding: 20px;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+  <nav>
+      <div class="logo">SCENE TEXT</div>
+      <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/feedback">Feedback</a></li>
+          <li><a href="/logout" style="padding: 8px 16px; background-color: red; color: white; text-decoration: none; border-radius: 5px;">Logout</a></li>
+      </ul>
+  </nav>
+
+  <div class="feedback-container">
+      <form class="feedback-form" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="f7eb38a5-c6d9-4094-8f9b-e42a7afbab30">
+          <h1>Feedback Form</h1>
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required>
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Your email" required>
+
+          <label for="feedback">Feedback</label>
+          <textarea id="feedback" name="feedback" placeholder="Your feedback..." rows="4" required></textarea>
+
+          <button type="submit" onclick="alert('Thank you for your feedback!')">Submit</button>
+      </form>
+  </div>
+  
+
+  <footer>
+      <p>&copy; 2025 SCENE TEXT. All Rights Reserved.</p>
+  </footer>
+</body>
+
+
+</html>

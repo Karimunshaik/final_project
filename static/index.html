@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scene Text Recognition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        nav {
+            background-color: #1a1a1d;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #f2a365;
+        }
+        .container {
+            background: #fff;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-left: 5px solid #4CAF50;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .output label {
+            font-weight: bold;
+            color: #388e3c;
+        }
+        .avatar-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .avatar-controls button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/feedback">Feedback</a></li>
+        </ul>
+    </nav>    
+
+    <div class="container">
+        <h1>Scene Text Recognition</h1>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="image">Upload Image:</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="txt">Upload TXT File :</label>
+                <input type="file" id="txt" name="txt" accept=".txt">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="output" class="output" style="display: none;"></div>
+
+        <div class="avatar-container">
+            <div class="avatar-video" id="avatar">
+                <video id="avatarVideo" loop width="200" height="150">
+                  <source src="../avatars/Avatar1.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="avatar-controls">
+                <button id="prevAvatar">⏮️</button>
+                <button id="playButton">▶️ Play</button>
+                <button id="pauseButton">⏸️ Pause</button>
+                <button id="nextAvatar">⏭️</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const playButton = document.getElementById('playButton');
+        const pauseButton = document.getElementById('pauseButton');
+
+        let currentSpeech = null;  // Holds the current speech instance
+
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            const imageFile = document.getElementById('image').files[0];
+            const txtFile = document.getElementById('txt').files[0];
+
+            formData.append('image', imageFile);
+            if (txtFile) {
+                formData.append('txt', txtFile);
+            }
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const results = await response.text();
+
+                const outputDiv = document.getElementById('output');
+                outputDiv.style.display = 'block';
+                if (response.ok) {
+                    outputDiv.innerHTML = `<pre>${results}</pre>`;
+                    
+                    // Show avatar and play video
+                    document.querySelector('.avatar-container').style.display = 'block';
+                    document.getElementById('avatarVideo').play();
+
+                    // Initialize Text-to-Speech
+                    startSpeech(result);
+                } else {
+                    outputDiv.textContent = `Error: ${results.error}`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+       // Text-to-Speech Function
+    function startSpeech(text) {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel(); // Stop any ongoing speech
+        }
+        currentSpeech = new SpeechSynthesisUtterance(text);
+        currentSpeech.lang = 'en-US';
+        currentSpeech.rate = 1;  // Adjust speed if needed (0.5 - slow, 1 - normal, 2 - fast)
+        window.speechSynthesis.speak(currentSpeech);
+    }
+
+    // Play Button - Resumes or starts reading
+    playButton.addEventListener('click', () => {
+        const text = document.getElementById('predictedText').innerText;
+        if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+        } else {
+            startSpeech(text);
+        }
+    });
+
+    // Pause Button - Pauses the reading
+    pauseButton.addEventListener('click', () => {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.pause();
+        }
+    });
+
+    // Avatar Switching Logic
+    const avatars = ["/avatars/Avatar1.mp4", "/avatars/Avatar2.mp4"];
+    let currentAvatar = 0;
+
+    document.getElementById('prevAvatar').addEventListener('click', () => {
+        currentAvatar = (currentAvatar - 1 + avatars.length) % avatars.length;
+        updateAvatar();
+    });
+
+    document.getElementById('nextAvatar').addEventListener('click', () => {
+        currentAvatar = (currentAvatar + 1) % avatars.length;
+        updateAvatar();
+    });
+
+    function updateAvatar() {
+        const avatarVideo = document.getElementById('avatarVideo');
+        avatarVideo.src = avatars[currentAvatar];
+        avatarVideo.load();
+        avatarVideo.play();
+    }
+    </script>
+</body>
+</html>
